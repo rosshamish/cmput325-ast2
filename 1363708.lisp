@@ -7,21 +7,21 @@
             ((eq f 'if) nil) ; todo if
             ((eq f 'null) (null (fl-interp (car arg) P)))
             ((eq f 'atom) (atom (fl-interp (car arg) P)))
-            ((eq f 'eq) nil) ; todo eq
+            ((eq f 'eq) (eq (fl-interp (car arg) P) fl-interp (cadr arg) P))
             ((eq f 'first)  (car (fl-interp (car arg) P)))
             ((eq f 'rest) (cdr (fl-interp (car arg) P)))
-            ((eq f 'cons) nil) ; todo cons
-            ((eq f 'equal) nil) ; todo equal
-            ((eq f 'number) nil) ; todo number
-            ((eq f '+) nil) ; todo +
-            ((eq f '-) nil) ; todo -
-            ((eq f '*) nil) ; todo *
-            ((eq f '>) nil) ; todo >
-            ((eq f '<) nil) ; todo <
-            ((eq f '=) nil) ; todo =
+            ((eq f 'cons) (cons (fl-interp (car arg) P) fl-interp (cadr arg) P))
+            ((eq f 'equal) (equal (fl-interp (car arg) P) fl-interp (cadr arg) P))
+            ((eq f 'number) (numberp (fl-interp (car arg) P)))
+            ((eq f '+) (+ (fl-interp (car arg) P) (fl-interp (cadr arg) P))
+            ((eq f '-) (- (fl-interp (car arg) P) (fl-interp (cadr arg) P))
+            ((eq f '*) (* (fl-interp (car arg) P) fl-interp (cadr arg) P))
+            ((eq f '>) (> (fl-interp (car arg) P) fl-interp (cadr arg) P))
+            ((eq f '<) (< (fl-interp (car arg) P) fl-interp (cadr arg) P))
+            ((eq f '=) (= (fl-interp (car arg) P) fl-interp (cadr arg) P))
             ((eq f 'and) nil) ; todo and
             ((eq f 'or) nil) ; todo or
-            ((eq f 'not) nil) ; todo not
+            ((eq f 'not) (not (fl-interp (car arg) P))
             
 	      ; if f is a user-defined function,
             ; then evaluate the arguments 
