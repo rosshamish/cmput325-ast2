@@ -21,8 +21,12 @@
             ((eq f '>) (> (fl-interp (car arg) P) (fl-interp (cadr arg) P)))
             ((eq f '<) (< (fl-interp (car arg) P) (fl-interp (cadr arg) P)))
             ((eq f '=) (= (fl-interp (car arg) P) (fl-interp (cadr arg) P)))
-            ((eq f 'and) nil) ; todo and
-            ((eq f 'or) nil) ; todo or
+            ((eq f 'and) (if (and (fl-interp (car arg) P) (fl-interp (cadr arg) P))
+                             'T
+                             nil))
+            ((eq f 'or) (if (or (fl-interp (car arg) P) (fl-interp (cadr arg) P))
+                            'T
+                            nil))
             ((eq f 'not) (not (fl-interp (car arg) P)))
             
 	      ; if f is a user-defined function,
