@@ -1,4 +1,5 @@
 (load "1363708.lisp")
+(trace fl-interp)
 
 (defun test (fn idx tests)
   (and tests
@@ -9,7 +10,7 @@
            (format t "~d FAIL: expected ~A, got ~A~%" idx ans res))
          (test fn (1+ idx) (cdr tests)))))
 
-(test 'fl-interp 11
+(test 'fl-interp 14
       '((((rest (1 2 (3))) nil) (2 (3)))
         (((rest (p 1 2 (3))) nil) (1 2 (3)))
         (((first (rest (1 (2 3)))) nil) (2 3))
