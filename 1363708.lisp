@@ -5,7 +5,7 @@
 	   (cond 
             ; handle built-in functions
             ((eq f 'if) nil) ; todo if
-            ((eq f 'null) nil) ; todo null
+            ((eq f 'null) (null (fl-interp arg P)))
             ((eq f 'atom) nil) ; todo atom
             ((eq f 'eq) nil) ; todo eq
             ((eq f 'first)  (car (fl-interp (car arg) P)))
