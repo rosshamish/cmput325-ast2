@@ -1,3 +1,15 @@
+; utility functions needed:
+; - find leftmost innermost function in arg
+; - find function f with arity==length(arg) in P
+; - apply function f
+
+; function arity takes a FL function definition and returns its arity
+(defun arity (f)
+  (cond
+    ((equal '= (car f)) -1)
+    ('t (+ 1 (arity (cdr f))))))
+
+
 (defun fl-interp (E P)
   (cond 
 	((atom E) E)
