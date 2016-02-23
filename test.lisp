@@ -1,5 +1,5 @@
 (load "1363708.lisp")
-;(trace fl-interp)
+(trace fl-interp)
 
 (defun test (fn idx tests)
   (and tests
