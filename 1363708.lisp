@@ -16,6 +16,9 @@
     ((equal '= (car f)) (list '=))
     ('t (cons (car f) (xname (cdr f))))))
 
+(defun xname-arity (f)
+  (cons (car f) (list (arity f))))
+
 ; function xbody takes a FL function definition as a list and returns its body
 ; as a list
 (defun xbody (f)
@@ -24,17 +27,10 @@
     ('t (xbody (cdr f)))))
 
 ; function get-mapping returns the value in the context C
-; pointed to by the given name. The name should contain
-; the function name (or variable name) as well as the parameters,
-; as well as the = sign (if appropriate)
-(defun get-mapping (name C)
+; pointed to by the given name-arity 2-element list.
+(defun get-mapping (name-arity C)
   (cond
-    ((equal (car C) name))))
-
-; (defun fl-interp-impl (E P C)
-;   (cond )  
-; )
-
+    ((equal (xname-arity (car C)) name-arity))))
 
 (defun fl-interp (E P)
   (cond 

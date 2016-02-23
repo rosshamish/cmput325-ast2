@@ -18,6 +18,10 @@
       '((((reduce = 1 2 3)) (reduce =))
         (((reduce X Y Z = 1 2 3)) (reduce X Y Z =))))
 
+(test 'xname-arity 18
+      '((((reduce = 1 2 3)) (reduce 0))
+        (((reduce X Y Z = 1 2 3)) (reduce 3))))
+
 (test 'xbody 18
       '((((reduce = 1 2 3)) (1 2 3))
         (((reduce X Y Z = 1 2 3)) (1 2 3))))
