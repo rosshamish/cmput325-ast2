@@ -1,6 +1,7 @@
 (load "1363708.lisp")
 (trace fl-interp-impl)
-; (trace )
+; (trace exists-in-context)
+; (trace extend-context)
 
 (defun test (fn idx tests)
   (and tests
@@ -11,8 +12,8 @@
            (format t "~d FAIL: expected ~A, got ~A~%" idx ans res))
          (test fn (1+ idx) (cdr tests)))))
 
-(test 'fl-interp 14
-      '((((rest (1 2 (3))) nil) (2 (3)))
+(test 'fl-interp 14 '(
+          ; (((rest (1 2 (3))) nil) (2 (3)))
       ;   (((rest (p 1 2 (3))) nil) (1 2 (3)))
       ;   (((first (rest (1 (2 3)))) nil) (2 3))
       ;   (((eq (< 3 4) (eq (+ 3 4) (- 2 3))) nil) nil)
@@ -23,9 +24,9 @@
       ;   (((eq (1 2 3) (1 2 3)) nil) nil)
       ;   (((equal (1 2 3) (1 2 3)) nil) t)
       ;   (((+ 1 2) nil) 3)
-        (((f (f 2)) ( (f X =  (* X X)))) 16)
-        (((a (+ 1 2)) ( (a X = (+ X 1)))) 4)
-        (((b (+ 1 2)) ( (b X = (+ X 1)))) 4)
+        ; (((f (f 2)) ( (f X =  (* X X)))) 16)
+        ; (((a (+ 1 2)) ( (a X = (+ X 1)))) 4)
+        ; (((b (+ 1 2)) ( (b X = (+ X 1)))) 4)
         (((reverse (1 2 3)) ( (reverse X =  (if (null X) nil (append (reverse (rest X)) (cons (first X) nil)))) (append X Y = (if (null X) Y (cons (first X) (append (rest X) Y)))))) (3 2 1))
         ; (((fib 10) ((fib n = (if (< n 2) 1 (+ (fib (- n 1)) (fib (- n 2))))))) 89)
         ; (((f 1) ((f n = (cons n (2 3 4 5 6))))) (1 2 3 4 5 6))

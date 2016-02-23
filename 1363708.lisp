@@ -82,8 +82,24 @@
 ; The context is a list of dotted pairs like ((name . value) (name . value))
 (defun extend-context (E P C args func)
   (append C
-          (mapcar #'(lambda (param-i arg-i) (cons param-i (funcall func arg-i P C)))
+          (mapcar #'(lambda (param-i arg-i) (cons param-i (funcall func (list arg-i) P C)))
                      (get-params E P) args)))
+
+; function exists-in-context returns a boolean: whether the given expression exists
+; in the given context or not.
+(defun exists-in-context (E C)
+  (cond
+    ((null C) nil)
+    ((equal E (caar C)) 't)
+    ('t (exists-in-context E (cdr C)))))
+
+; function evaluate-in-context returns the value of the given expression 
+; in the given context.
+(defun evaluate-in-context (E C)
+  (cond
+    ((null C) nil)
+    ((equal E (caar C)) (cdar C))
+    ('t (exists-in-context E (cdr C)))))
 
 (defun fl-interp-impl (E P C)
   (cond 
@@ -120,7 +136,7 @@
             ; then evaluate the arguments 
             ; and apply f to the evaluated arguments 
             ; (applicative order reduction)
-            ; ((exists-in-context E C) (evaluate-in-context E C))
+            ((exists-in-context f C) (evaluate-in-context f C))
             ((is-user-def E P) (fl-interp-impl (get-body E P) P (extend-context E P C arg #'fl-interp-impl)))
 
             ; otherwise f is undefined; in this case,
