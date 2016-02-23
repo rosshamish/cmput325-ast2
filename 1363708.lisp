@@ -3,11 +3,37 @@
 ; - find function f with arity==length(arg) in P
 ; - apply function f
 
-; function arity takes a FL function definition and returns its arity
+; function arity takes a FL function definition as a list and returns its arity
 (defun arity (f)
   (cond
     ((equal '= (car f)) -1)
     ('t (+ 1 (arity (cdr f))))))
+
+; function xname takes a FL function definition as a list and returns its name
+; as a list including its parameters list and the = sign
+(defun xname (f)
+  (cond
+    ((equal '= (car f)) (list '=))
+    ('t (cons (car f) (xname (cdr f))))))
+
+; function xbody takes a FL function definition as a list and returns its body
+; as a list
+(defun xbody (f)
+  (cond
+    ((equal '= (car f)) (cdr f))
+    ('t (xbody (cdr f)))))
+
+; function get-mapping returns the value in the context C
+; pointed to by the given name. The name should contain
+; the function name (or variable name) as well as the parameters,
+; as well as the = sign (if appropriate)
+(defun get-mapping (name C)
+  (cond
+    ((equal (car C) name))))
+
+; (defun fl-interp-impl (E P C)
+;   (cond )  
+; )
 
 
 (defun fl-interp (E P)

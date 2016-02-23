@@ -13,3 +13,11 @@
 (test 'arity 13
       '((((reduce = 1 2 3)) 0)
         (((reduce A B C = 1 2 3)) 3)))
+
+(test 'xname 18
+      '((((reduce = 1 2 3)) (reduce =))
+        (((reduce X Y Z = 1 2 3)) (reduce X Y Z =))))
+
+(test 'xbody 18
+      '((((reduce = 1 2 3)) (1 2 3))
+        (((reduce X Y Z = 1 2 3)) (1 2 3))))
