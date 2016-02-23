@@ -82,7 +82,7 @@
 ; The context is a list of dotted pairs like ((name . value) (name . value))
 (defun extend-context (E P C args func)
   (append C
-          (mapcar #'(lambda (param-i arg-i) (cons param-i (funcall func (list arg-i) P C)))
+          (mapcar #'(lambda (param-i arg-i) (cons param-i (funcall func arg-i P C)))
                      (get-params E P) args)))
 
 ; function exists-in-context returns a boolean: whether the given expression exists
@@ -103,13 +103,15 @@
 
 (defun fl-interp-impl (E P C)
   (cond 
-	((atom E) E)
+	((atom E) (cond
+                ((exists-in-context E C) (evaluate-in-context E C))
+                ('t E)))
       (t (let ( (f (car E))  (arg (cdr E)) )
 	   (cond 
             ; handle built-in functions
-            ((eq f 'if) (if (fl-interp-impl (car arg) P C)
-                            (fl-interp-impl (cadr arg) P C)
-                            (fl-interp-impl (caddr arg) P C)))
+            ((eq f 'if) (cond
+                          ((fl-interp-impl (car arg) P C) (fl-interp-impl (cadr arg) P C))
+                          ('t (fl-interp-impl (caddr arg) P C))))
             ((eq f 'null) (null (fl-interp-impl (car arg) P C)))
             ((eq f 'atom) (atom (fl-interp-impl (car arg) P C)))
             ((eq f 'eq) (eq (fl-interp-impl (car arg) P C) (fl-interp-impl (cadr arg) P C)))
