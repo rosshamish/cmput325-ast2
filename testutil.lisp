@@ -27,9 +27,9 @@
         (((reduce X Y Z = 1 2 3)) (reduce 3))))
 
 (test 'xbody 18
-      '((((reduce = 1 2 3)) (1 2 3))
-        (((reduce X Y Z = 1 2 3)) (1 2 3))))
+      '((((reduce = (+ 2 3))) (+ 2 3))
+        (((reduce X Y Z = 2)) 2)))
 
 (test 'get-body 18
-      '((((reduce) ((reduce = 4 5 6))) (4 5 6))
-        (((reduce X Y Z) ((reduce 4 5 6 = 7 8 9))) (7 8 9))))
+      '((((reduce) ((reduce = 4))) 4)
+        (((reduce 4 5 6) ((reduce X Y Z = (+ X 1)))) (+ X 1))))

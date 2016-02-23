@@ -41,7 +41,9 @@
 ; as a list
 (defun xbody (f)
   (cond
-    ((equal '= (car f)) (cdr f))
+    ((equal '= (car f)) (cond
+                          ((atom (cdr f)) (cdr f))
+                          ('t (cadr f))))
     ('t (xbody (cdr f)))))
 
 ; function get-body takes an FL function usage as a list and returns the body
@@ -90,12 +92,17 @@
             ; if f is a user-defined function,
             ; then evaluate the arguments 
             ; and apply f to the evaluated arguments 
-            ; (applicative order reduction) 
-            ((is-user-def E P) (fl-interp-impl E P C))
+            ; (applicative order reduction)
+            ; ((exists-in-context E C))
+            ((is-user-def E P) (fl-interp-impl (get-body E P) P 
+                                               (append C (mapcar #'(lambda (a) (fl-interp-impl a P C)) arg))))
 
             ; otherwise f is undefined; in this case,
             ; E is returned as if it is quoted in lisp
             (t E))))))
+
+; (defun extend-context (arg C P)
+;   (append C (mapcar #'(lambda (a) (fl-interp-impl a P C)) arg)))
 
 (defun fl-interp (E P)
   (fl-interp-impl E P ()))
