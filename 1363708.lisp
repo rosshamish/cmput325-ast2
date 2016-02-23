@@ -53,10 +53,37 @@
     ((null P) nil)
     ((equal (xname-arity-use f) (xname-arity (car P))) (xbody (car P)))))
 
+; function get-def takes an FL function usage as a list and returns the definition
+; in program P
+(defun get-def (f P)
+  (cond
+    ((null P) nil)
+    ((equal (caar P) (car f)) (car P))
+    ('t (get-def f (cdr P)))))
+
+; function get-params takes an FL function usage as a list and returns the parameter names
+; as a list, as defined in program P
+(defun get-params-impl (def-without-name)
+  (cond
+    ((equal '= (car def-without-name)) nil)
+    ('t (cons (car def-without-name) (get-params-impl (cdr def-without-name))))))
+(defun get-params (f P)
+  (get-params-impl (cdr (get-def f P))))
+
 ; function is-user-def takes an FL expression (function usage) as a list and returns whether
 ; it is user-defined or not
 (defun is-user-def (E P)
   (equal (xname-arity-use E) (xname-arity (car P))))
+
+; function extend-context takes an FL expression (function usage) as a list, a program P,
+; a context C, a list of concrete arguments to the function, and an interpreter function
+; to call on the arguments to evaluate them.
+; It extends the context C and returns the new extended context.
+; The context is a list of dotted pairs like ((name . value) (name . value))
+(defun extend-context (E P C args func)
+  (append C
+          (mapcar #'(lambda (param-i arg-i) (cons param-i (funcall func arg-i P C)))
+                     (get-params E P) args)))
 
 (defun fl-interp-impl (E P C)
   (cond 
@@ -93,16 +120,12 @@
             ; then evaluate the arguments 
             ; and apply f to the evaluated arguments 
             ; (applicative order reduction)
-            ; ((exists-in-context E C))
-            ((is-user-def E P) (fl-interp-impl (get-body E P) P 
-                                               (append C (mapcar #'(lambda (a) (fl-interp-impl a P C)) arg))))
+            ; ((exists-in-context E C) (evaluate-in-context E C))
+            ((is-user-def E P) (fl-interp-impl (get-body E P) P (extend-context E P C arg #'fl-interp-impl)))
 
             ; otherwise f is undefined; in this case,
             ; E is returned as if it is quoted in lisp
             (t E))))))
-
-; (defun extend-context (arg C P)
-;   (append C (mapcar #'(lambda (a) (fl-interp-impl a P C)) arg)))
 
 (defun fl-interp (E P)
   (fl-interp-impl E P ()))

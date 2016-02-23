@@ -33,3 +33,12 @@
 (test 'get-body 18
       '((((reduce) ((reduce = 4))) 4)
         (((reduce 4 5 6) ((reduce X Y Z = (+ X 1)))) (+ X 1))))
+
+(test 'get-def 18
+      '((((reduce) ((reduce = 4))) (reduce = 4))
+        (((reduce 4 5 6) ((reduce X Y Z = (+ X 1)))) (reduce X Y Z = (+ X 1)))))
+
+(test 'get-params 18
+      '((((reduce) ((reduce = 4))) ())
+        (((reduce 4 5 6) ((reduce X Y Z = (+ X 1)))) (X Y Z))))
+
