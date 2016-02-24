@@ -51,7 +51,8 @@
 (defun get-body (f P)
   (cond
     ((null P) nil)
-    ((equal (xname-arity-use f) (xname-arity (car P))) (xbody (car P)))))
+    ((equal (xname-arity-use f) (xname-arity (car P))) (xbody (car P)))
+    ('t (get-body f (cdr P)))))
 
 ; function get-def takes an FL function usage as a list and returns the definition
 ; in program P
@@ -73,7 +74,10 @@
 ; function is-user-def takes an FL expression (function usage) as a list and returns whether
 ; it is user-defined or not
 (defun is-user-def (E P)
-  (equal (xname-arity-use E) (xname-arity (car P))))
+  (cond
+    ((null P) nil)
+    ((equal (xname-arity-use E) (xname-arity (car P))) 't)
+    ('t (is-user-def E (cdr P)))))
 
 ; function extend-context takes an FL expression (function usage) as a list, a program P,
 ; a context C, a list of concrete arguments to the function, and an interpreter function
@@ -81,9 +85,7 @@
 ; It extends the context C and returns the new extended context.
 ; The context is a list of dotted pairs like ((name . value) (name . value))
 (defun extend-context (E P C args func)
-  (append C
-          (mapcar #'(lambda (param-i arg-i) (cons param-i (funcall func arg-i P C)))
-                     (get-params E P) args)))
+  (append (mapcar #'(lambda (param-i arg-i) (cons param-i (funcall func arg-i P C))) (get-params E P) args) C))
 
 ; function exists-in-context returns a boolean: whether the given expression exists
 ; in the given context or not.
@@ -99,7 +101,7 @@
   (cond
     ((null C) nil)
     ((equal E (caar C)) (cdar C))
-    ('t (exists-in-context E (cdr C)))))
+    ('t (evaluate-in-context E (cdr C)))))
 
 (defun fl-interp-impl (E P C)
   (cond 
@@ -146,5 +148,5 @@
             (t E))))))
 
 (defun fl-interp (E P)
-  (fl-interp-impl E P ()))
+  (fl-interp-impl E P nil))
   
