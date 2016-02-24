@@ -1,9 +1,63 @@
-; utility functions needed:
-; - find leftmost innermost function in arg
-; - find function f with arity==length(arg) in P
-; - apply function f
+; CMPUT 325 Wi16 - NON-PROCEDURAL PROG LANGUAGES
+; Assignment 2: An Interpreter for a Simple Functional Language
+; February 24, 2016
 
-; Function my-count returns the length of list L.
+; The interpreter is written in Common Lisp, tested on the Steel Bank Common Lisp
+; implementation.
+
+; As described in the specification, the interpreter is implemented based on
+; Applicative Order Reduction (AOR). That is, evaluation is carried out as a
+; series of reductions, where expressions are reduced to normal form and then
+; evaluated. Arguments are evaluated before a function is applied, and functions
+; are reduced starting with the leftmost innermost function.
+
+; This interpreter uses a context. This context maps names, say X, to values,
+; say 3. When a function is called, its parameters (names) are mapped to the evaluated
+; values of its arguments (values), and the context is extended to include these
+; names and values. 
+
+; Name collisions between function parameter lists are avoided by prepending when extending the context. 
+; That is, when new name-value pairs are added to the context, they are prepended to the list.
+; That way, when retrieving a value for a name, the most recent (read: most local) value for that
+; name will be returned.
+
+; Functions are defined by (a) their name, and (b) their arity. Arity is defined as the
+; number of parameters expected by the function. In this implementation, functions are correctly
+; distinguished by both (a) and (b).
+
+; Functions are documented at their definitions in this file. All code is in this file.
+; The main entry point is fl-interp.
+
+; Utility functions are tested in file testutil.lisp (not included in assignment submission).
+
+; Interpreter as a whole is tested in file test.lisp (not included in assignment submission).
+; Attribution for test.lisp:
+; - Author: Noah Weninger
+; - Published: February 4, 2016
+; - Accessed: February 8, 2016
+
+; Utility Functions:
+; my-count
+; arity-use
+; arity-def
+; xname
+; xname-arity
+; xname-arity-use
+; xbody
+; get-body
+; get-def
+; get-params
+; is-user-def
+; extend-context
+; exists-in-context
+; evaluate-in-context
+
+; Main Functions:
+; fl-interp-impl
+; fl-interp
+
+
+; function my-count returns the length of list L.
 (defun my-count (L)
     (if (null L)
         0
@@ -103,6 +157,10 @@
     ((equal E (caar C)) (cdar C))
     ('t (evaluate-in-context E (cdr C)))))
 
+; function fl-interp-impl implements function fl-interp by keeping track
+; of an additional parameter, the context C. The context is a list of name-value
+; pairs, where the car of each element is the name, and the cdr of each element
+; is the value.
 (defun fl-interp-impl (E P C)
   (cond 
 	((atom E) (cond
@@ -147,6 +205,8 @@
             ; E is returned as if it is quoted in lisp
             (t E))))))
 
+; function fl-interp is the entry-point into the interpreter.
+; It calls fl-interp-impl with an empty initial context.
 (defun fl-interp (E P)
   (fl-interp-impl E P nil))
   

@@ -39,6 +39,6 @@
         (((or nil 2) nil) t)
         (((+ (f 1) (f 1 2)) ((f x = x) (f x y = (+ x y)))) 4)
         ; The following two should not terminate under applicative order reduction
-        ;(((f 0 (g 1)) ((g X = (+ X (g (+ X 1)))) (f X Y = (if (eq X 0) 0 Y)))) 0)
-        ;(((h (g 5)) ((g X = (g (g X))) (h X = a))) a)
+        ; (((f 0 (g 1)) ((g X = (+ X (g (+ X 1)))) (f X Y = (if (eq X 0) 0 Y)))) 0)
+        ; (((h (g 5)) ((g X = (g (g X))) (h X = a))) a)
         ))

@@ -1,5 +1,4 @@
 (load "1363708.lisp")
-; (trace get-body)
 
 (defun test (fn idx tests)
   (and tests
