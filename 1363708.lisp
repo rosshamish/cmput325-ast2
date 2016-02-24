@@ -59,7 +59,7 @@
 (defun get-def (f P)
   (cond
     ((null P) nil)
-    ((equal (caar P) (car f)) (car P))
+    ((equal (xname-arity (car P)) (xname-arity-use f)) (car P))
     ('t (get-def f (cdr P)))))
 
 ; function get-params takes an FL function usage as a list and returns the parameter names

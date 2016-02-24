@@ -1,7 +1,7 @@
 (load "1363708.lisp")
-(trace fl-interp-impl)
+; (trace fl-interp-impl)
 ; (trace exists-in-context)
-(trace extend-context)
+; (trace extend-context)
 ; (trace get-body)
 
 (defun test (fn idx tests)
